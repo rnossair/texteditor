@@ -1,13 +1,13 @@
 # CSC 207: Text Editor
 
-**Author**: _(TODO: fill me in)_
+**Author**: Rayane Nossair
 
 ## Resources Used
 
-+ _(TODO: fill me in)_
-+ ...
-+ ...
++ Java 21 API Docs
++ CSC 207 TTAP Website
++ VS Code
 
 ## Changelog
 
-_(TODO: fill me in with a log of your committed changes)_
++ Attempted Part 1 and Part 3
