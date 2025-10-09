@@ -18,7 +18,8 @@
 
 + Relevant input: n = length of buffer String.
 + Critical operations: 
-```String half1 = buffer.substring(0, index);
+```
+   String half1 = buffer.substring(0, index);
    String half2 = buffer.substring(index);
 ```
 + T(n) = n
