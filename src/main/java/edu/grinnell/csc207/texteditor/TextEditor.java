@@ -20,56 +20,52 @@ public class TextEditor {
 
     /**
      * The main entry point for the TextEditor application.
+     * 
      * @param args command-line arguments.
-     * @throws IOException 
+     * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        // if (args.length != 1) {
-        //     System.err.println("Usage: java TextEditor <filename>");
-        //     System.exit(1);
-        // }
-
-        // TODO: fill me in with a text editor TUI!
         DefaultTerminalFactory factory = new DefaultTerminalFactory();
         TerminalScreen screen = factory.createScreen();
         // String path = args[0];
         String path = "ello.txt";
         Path realPath = Paths.get(path); // get real
-        if(!Files.exists(realPath) || !Files.isRegularFile(realPath)){
+        if (!Files.exists(realPath) || !Files.isRegularFile(realPath)) {
             throw new FileNotFoundException(); // intellisense guess i swear
         }
         System.out.format("Loading %s...\n", path);
         boolean isRunning = true;
         GapBuffer buf = new GapBuffer();
         screen.startScreen();
-        while(isRunning) {
+        while (isRunning) {
             KeyStroke stroke = screen.readInput();
-            if(stroke.equals(KeyType.Character)){
+            if (stroke.equals(KeyType.Character)) {
                 buf.insert(stroke.getCharacter());
-            }else if(stroke.equals(KeyType.Backspace)){
+            } else if (stroke.equals(KeyType.Backspace)) {
                 buf.delete();
-            }else if(stroke.equals(KeyType.ArrowLeft)){
+            } else if (stroke.equals(KeyType.ArrowLeft)) {
                 buf.moveLeft();
-            }else if(stroke.equals(KeyType.ArrowRight)){
+            } else if (stroke.equals(KeyType.ArrowRight)) {
                 buf.moveRight();
-            }else if(stroke.equals(KeyType.Escape)){
+            } else if (stroke.equals(KeyType.Escape)) {
                 isRunning = false;
             }
             drawBuffer(buf, screen);
             screen.refresh();
         }
     }
-    public static void drawBuffer(GapBuffer buf, TerminalScreen screen){
+
+    public static void drawBuffer(GapBuffer buf, TerminalScreen screen) {
         boolean stop = false;
-        for(int i = 0; i < buf.getSize(); i++){
-            for(int j = 0; j < 1; j++){
-                if(30 * i + j == buf.toString().length()){
+        for (int i = 0; i < buf.getSize(); i++) {
+            for (int j = 0; j < 1; j++) {
+                if (30 * i + j == buf.toString().length()) {
                     stop = true;
                     break;
                 }
-                screen.setCharacter(i,j, TextCharacter.fromCharacter(buf.getChar(30 * i + j))[0]);
+                screen.setCharacter(i, j, TextCharacter.fromCharacter(buf.getChar(30 * i + j))[0]);
             }
-            if(stop){
+            if (stop) {
                 break;
             }
         }
