@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
@@ -28,27 +29,36 @@ public class TextEditor {
         DefaultTerminalFactory factory = new DefaultTerminalFactory();
         TerminalScreen screen = factory.createScreen();
         // String path = args[0];
-        String path = "ello.txt";
+        String path = "./ello.txt";
         Path realPath = Paths.get(path); // get real
         if (!Files.exists(realPath) || !Files.isRegularFile(realPath)) {
             throw new FileNotFoundException(); // intellisense guess i swear
         }
         System.out.format("Loading %s...\n", path);
         boolean isRunning = true;
-        GapBuffer buf = new GapBuffer();
+        GapBuffer buf;
+        if(Files.isRegularFile(Paths.get(path))){
+            buf = new GapBuffer(Files.readString(Paths.get(path)));
+        }else{
+            buf = new GapBuffer(5);
+        }
+        
         screen.startScreen();
+        drawBuffer(buf, screen);
         while (isRunning) {
             KeyStroke stroke = screen.readInput();
-            if (stroke.equals(KeyType.Character)) {
+            if (stroke.getKeyType().equals(KeyType.Character)) {
                 buf.insert(stroke.getCharacter());
-            } else if (stroke.equals(KeyType.Backspace)) {
+            } else if (stroke.getKeyType().equals(KeyType.Backspace)) {
                 buf.delete();
-            } else if (stroke.equals(KeyType.ArrowLeft)) {
+            } else if (stroke.getKeyType().equals(KeyType.ArrowLeft)) {
                 buf.moveLeft();
-            } else if (stroke.equals(KeyType.ArrowRight)) {
+            } else if (stroke.getKeyType().equals(KeyType.ArrowRight)) {
                 buf.moveRight();
-            } else if (stroke.equals(KeyType.Escape)) {
+            } else if (stroke.getKeyType().equals(KeyType.Escape)) {
                 isRunning = false;
+                Files.writeString(Paths.get(path), buf.toString());
+                System.exit(0);
             }
             drawBuffer(buf, screen);
             screen.refresh();
@@ -56,18 +66,25 @@ public class TextEditor {
     }
 
     public static void drawBuffer(GapBuffer buf, TerminalScreen screen) {
+        screen.clear();
         boolean stop = false;
-        for (int i = 0; i < buf.getSize(); i++) {
-            for (int j = 0; j < 1; j++) {
+        for (int i = 0; i <= buf.getSize() / 30; i++) {
+            for (int j = 0; j < 30; j++) {
                 if (30 * i + j == buf.toString().length()) {
                     stop = true;
                     break;
                 }
-                screen.setCharacter(i, j, TextCharacter.fromCharacter(buf.getChar(30 * i + j))[0]);
+                // String bfTsr = buf.toString();
+                // System.out.println(buf.toString());
+
+                screen.setCharacter(j, i, TextCharacter.fromCharacter(buf.getChar(30 * i + j))[0]);
             }
+            screen.setCursorPosition(new TerminalPosition(buf.startIndex % 30,buf.startIndex / 30));
             if (stop) {
                 break;
             }
+            
         }
     }
 }
+// buf.getChar(30 * i + j)

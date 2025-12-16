@@ -7,18 +7,32 @@ import java.util.Arrays;
  */
 public class GapBuffer {
 
-    char[] buffer = new char[5];
-    int startIndex = 1;
-    int endIndex = 3;
+    char[] buffer = new char[3];
+    int startIndex = 0;
+    int endIndex = 2;
+
+    public GapBuffer(int size){
+        buffer = new char[size];
+        startIndex = 0;
+        endIndex = size - 1;
+    }
+
+    public GapBuffer(String str){   
+        char[] strArr = str.toCharArray();
+        buffer = Arrays.copyOf(strArr, str.length() + 8);
+        startIndex = str.length();
+        endIndex = startIndex + 7;
+    }
     /**
      * Doubles the size of the buffer from its current size.
      */
     public void doubleBuffer() {
         int bufferLength = buffer.length - (endIndex - startIndex);
-        int lengthOfStringTwo = Arrays.copyOfRange(buffer, endIndex, buffer.length).length;
+        int lengthOfStringTwo = buffer.length - endIndex;
         char[] newBuffer = Arrays.copyOf(buffer, 2 * buffer.length);
-        System.arraycopy(buffer, endIndex, newBuffer, newBuffer.length - 1 - lengthOfStringTwo, lengthOfStringTwo);
-        endIndex = newBuffer.length - lengthOfStringTwo - 1;
+        System.arraycopy(buffer, endIndex, newBuffer, newBuffer.length - lengthOfStringTwo, lengthOfStringTwo);
+        buffer = newBuffer;
+        endIndex = newBuffer.length - lengthOfStringTwo;
     }
 
     /**
@@ -39,6 +53,9 @@ public class GapBuffer {
      * Deletes a character at the current index
      */
     public void delete() {
+        if(startIndex == 0){
+            return;
+        }
         startIndex--;
     }
 
@@ -54,18 +71,35 @@ public class GapBuffer {
      * Moves the index to the left.
      */
     public void moveLeft() {
+        if(startIndex == 0){
+            return;
+        }   
+        if(startIndex == endIndex){
+            doubleBuffer();
+        }
+
+        buffer[endIndex] = buffer[startIndex - 1];
         startIndex--;
         endIndex--;
-        buffer[endIndex] = buffer[startIndex + 1];
+        
+        System.out.println("hi");
     }
 
     /**
      * Moves the index to the right.
      */
     public void moveRight() {
-        startIndex++;
+        if(startIndex == endIndex){
+            doubleBuffer();
+        }
+        if(endIndex == buffer.length - 1){
+            return;
+        }
         endIndex++;
-        buffer[startIndex] = buffer[endIndex - 1];
+        buffer[startIndex] = buffer[endIndex];
+        startIndex++;
+        
+        
     }
 
     /**
@@ -93,7 +127,7 @@ public class GapBuffer {
     public String toString() {
         String result = "";
         String half1 = new String(Arrays.copyOfRange(buffer, 0, startIndex));
-        String half2 = new String(Arrays.copyOfRange(buffer, endIndex, buffer.length - 1));
+        String half2 = new String(Arrays.copyOfRange(buffer, endIndex + 1, buffer.length));
         return half1 + half2;
     }
 }
