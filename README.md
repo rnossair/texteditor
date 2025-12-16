@@ -7,12 +7,14 @@
 + Java 21 API Docs
 + CSC 207 TTAP Website
 + VS Code
++ Jqwik documentation
 
 ## Changelog
 
 + Attempted Part 1 and Part 3
 + Attempted Part 4
 + Attempted Part 2
++ Fixed texteditor crashes, added test suites
 
 ## Part 2
 

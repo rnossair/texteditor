@@ -8,7 +8,7 @@ public class SimpleStringBuffer {
     private String buffer;
     private int index;
 
-    public SimpleStringBuffer(){
+    public SimpleStringBuffer() {
         buffer = "";
         index = 0;
     }
@@ -21,6 +21,9 @@ public class SimpleStringBuffer {
     }
 
     public void delete() {
+        if(index == 0){
+            return;
+        }
         String half1 = buffer.substring(0, index - 1);
         String half2 = buffer.substring(index);
         buffer = half1 + half2;
@@ -32,10 +35,16 @@ public class SimpleStringBuffer {
     }
 
     public void moveLeft() {
+        if (index == 0) {
+            return;
+        }
         index--;
     }
 
     public void moveRight() {
+        if(index >= buffer.length() - 1){
+            return;
+        }
         index++;
     }
 
