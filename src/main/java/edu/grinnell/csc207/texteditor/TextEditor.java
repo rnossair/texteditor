@@ -28,21 +28,22 @@ public class TextEditor {
     public static void main(String[] args) throws IOException {
         DefaultTerminalFactory factory = new DefaultTerminalFactory();
         TerminalScreen screen = factory.createScreen();
-        // String path = args[0];
-        String path = "./ello.txt";
+        String path = args[0];
+        // String path = "./ello.txt";
         Path realPath = Paths.get(path); // get real
-        if (!Files.exists(realPath) || !Files.isRegularFile(realPath)) {
-            throw new FileNotFoundException(); // intellisense guess i swear
-        }
+        // if (!Files.exists(realPath) || !Files.isRegularFile(realPath)) {
+        // throw new FileNotFoundException(); // intellisense guess i swear
+        // }
         System.out.format("Loading %s...\n", path);
         boolean isRunning = true;
         GapBuffer buf;
-        if(Files.isRegularFile(Paths.get(path))){
+        if (Files.isRegularFile(Paths.get(path))) {
             buf = new GapBuffer(Files.readString(Paths.get(path)));
-        }else{
+        } else {
+            System.out.println("Creating new file...");
             buf = new GapBuffer(5);
         }
-        
+
         screen.startScreen();
         drawBuffer(buf, screen);
         while (isRunning) {
@@ -79,11 +80,11 @@ public class TextEditor {
 
                 screen.setCharacter(j, i, TextCharacter.fromCharacter(buf.getChar(30 * i + j))[0]);
             }
-            screen.setCursorPosition(new TerminalPosition(buf.startIndex % 30,buf.startIndex / 30));
+            screen.setCursorPosition(new TerminalPosition(buf.startIndex % 30, buf.startIndex / 30));
             if (stop) {
                 break;
             }
-            
+
         }
     }
 }

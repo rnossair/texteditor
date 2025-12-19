@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class GapBufferTests {
     GapBuffer buf = new GapBuffer(3);
 
-
     @Test
     public void addingChars() {
         buf.insert('H');

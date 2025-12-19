@@ -14,7 +14,7 @@ public class SimpleStringBufferTests {
     public boolean bufferTest(
             @ForAll("printableStrings") String str) {
         buf = new SimpleStringBuffer();
-        for(char c : str.toCharArray()){
+        for (char c : str.toCharArray()) {
             buf.insert(c);
         }
         return buf.toString() != str;
